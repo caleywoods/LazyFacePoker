@@ -2,8 +2,7 @@ function getBirthdays() {
     var birthdays = $( '._3ng0 > div' ),
         textAreas = birthdays.find( 'textarea[name="message"]' ),
         message   = 'Happy Birthday ',
-        anchors     = birthdays.find( 'a' ),
-        count     = 0,
+        anchors   = birthdays.find( 'a' ),
         names     = anchors.filter( function( idx ) {
                         return this.href.split( '/' )[3] !== "friendship";
                     }),
@@ -16,45 +15,50 @@ function getBirthdays() {
         var name     = names[idx].innerText.split( ' ' )[0],
             friendID = friends[idx].href.split( '/' )[5],
             form     = node.closest( 'form' ),
-            dtsg     = $(form).find( 'input[name="fb_dtsg"]' )[0].value,
+            dtsg     = $( form ).find( 'input[name="fb_dtsg"]' )[0].value,
             postData = {};
 
-        postData.__a               = '1';
-        postData.birthday          = 1;
-        postData.__dyn             = "";
+            node.val = message + name + "!";
+            node.value = message + name + "!";
+            node.innerText = message + name + "!";
+
         postData.fb_dtsg           = dtsg;
         postData.message_text      = message + name + "!";
-        postData.nctr[_mod]        = 'pagelet_calendar_content'
-        postData.post              = 'Post';
-        postData.render_notif_only = 1;
-        postData.__rev             = '2168097';
-        postData.__req             = 11;
-        postData.source            = 'calendar';
-        postData.ttstamp           = generateTStamp( dtsg );
         postData.__user            = myID;
         postData.walltarget        = friendID;
 
-        submitWishes( postData )
+        var toSend = message + name + "!";
+
+        // submitWishes( postData )
+        submitForm( node, form, toSend);
     });
 }
 
-function submitWishes( url, stuff ) {
-    $.post({
-        url: url,
-        data: stuff,
-        success: function( resp ) {
-            console.log( resp );
+function submitForm(textarea, form, message) {
+    textarea.value = message;
+
+    var segments = []
+
+    for (var i = 0, length = form.elements.length; i < length; i++) {
+        var field = form.elements[i];
+        // Skip fields without a name
+        if (!field.hasAttribute["name"]) {
+            continue;
         }
-    })
+        segments.push(field.name + "=" + field.value);
+    }
+
+    //Someone loves var X
+    var x = new XMLHttpRequest();
+    x.onload = submitFormSuccess;
+    x.open("POST", form.action, true);
+    x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    x.send(segments.join("&"));
+
 }
 
-function generateTStamp( dtsg ) {
-    var u = '';
-    for ( var v=0; v < dtsg.length; v++ ) {
-        u += dtsg.charCodeAt( v );
-        ttstamp = '2' + u;
-    }
-    return ttstamp;
+function submitFormSuccess(e) {
+    console.log(e.responseText);
 }
 
 $( document ).ready(function() { getBirthdays(); });
