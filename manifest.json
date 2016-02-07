@@ -1,0 +1,35 @@
+{
+	"manifest_version": 2,
+	"name": "LazyFacePoker",
+	"short_name": "DogFood",
+	"author": "Caley Woods",
+	"description": "Never forgot to send birthday wishes on Facebook again!",
+	"version": "0.0.1",
+	"content_scripts": [
+		{
+			"matches": [
+				"*://*.facebook.com/events/birthdays"
+			],
+			"js": [
+				"lib/jquery-2.1.4.min.js",
+				"lib/jquery-ui.min.js",
+				"lib/moment.min.js",
+				"main.js"
+			],
+			"css": [
+				"css/jquery-ui.min.css",
+				"css/jquery-ui.structure.min.css",
+				"css/jquery-ui.theme.min.css",
+				"css/style.css"
+			]
+		}
+	],
+	"browser_action": {
+		"default_icon": "icon-large.png",
+		"default_popup": "popup.html"
+	},
+	"permissions": [
+		"activeTab",
+		"*://*.facebook.com/events/birthdays"
+	]
+}
